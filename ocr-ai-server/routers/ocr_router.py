@@ -1,6 +1,6 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException
-from services.ocr_service import process_receipt_image
-from models.schemas import OCRResponse
+from services.ocr_service import process_receipt_image, extract_total_amount
+from models.schemas import OCRResponse, ReceiptTotalResponse
 
 router = APIRouter()
 
@@ -24,3 +24,26 @@ async def analyze_receipt(file: UploadFile = File(...)):
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"OCR 처리 중 오류가 발생했습니다: {str(e)}")
+    
+@router.post("/receipt/total", response_model=ReceiptTotalResponse)
+async def analyze_receipt_total(file: UploadFile = File(...)):
+    """
+    영수증 이미지를 업로드받아 총 결제 금액만 추출하여 반환합니다.
+    """
+    if not file.content_type.startswith("image/"):
+        raise HTTPException(status_code=400, detail="이미지 파일만 업로드 가능합니다.")
+
+    try:
+        contents = await file.read()
+        
+        # OCR 텍스트 추출
+        extracted_data = process_receipt_image(contents)
+        
+        # 문서의 규칙에 따라 총액 계산
+        total_amount = extract_total_amount(extracted_data)
+        
+        # 형식에 맞춰 반환
+        return ReceiptTotalResponse(total=total_amount)
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"총액 처리 중 오류가 발생했습니다: {str(e)}")
