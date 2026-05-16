@@ -8,3 +8,6 @@ class ExtractedText(BaseModel):
 class OCRResponse(BaseModel):
     success: bool
     data: List[ExtractedText]
+
+class ReceiptTotalResponse(BaseModel):
+    total: int
