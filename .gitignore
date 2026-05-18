@@ -1,36 +1,75 @@
 # =========================
-# Python 기본
+# Python
 # =========================
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
-
-# =========================
-# 가상환경 (Virtual Environment)
-# =========================
 venv/
 env/
 .venv/
 
 # =========================
-# 보안 및 환경변수
+# Java & Gradle
 # =========================
-.env
-.env.*
-*.pem
+*.class
+*.log
+*.ctxt
+.mtj.tmp/
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/resources/*.jar
+!**/src/test/resources/*.jar
 
 # =========================
-# PaddleOCR 및 프로젝트 임시 파일
+# OCR & AI
 # =========================
-# PaddleOCR 모델이 다운로드되는 임시 캐시 폴더
 .paddleocr/
 inference/
 
 # =========================
-# IDE 및 OS 시스템 파일
+# IDE (IntelliJ, VS Code, Eclipse)
 # =========================
-.vscode/
 .idea/
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/resources/META-INF/MANIFEST.MF
+
+.vscode/
+
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+bin/
+
+# =========================
+# OS & System
+# =========================
 .DS_Store
 Thumbs.db
+desktop.ini
+
+# =========================
+# Secrets & Config
+# =========================
+.env
+.env.*
+*.pem
+application-*.yml
+application-*.properties
+application.yml
+application.properties
