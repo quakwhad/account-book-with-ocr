@@ -8,7 +8,7 @@ app = FastAPI(
 )
 
 # 라우터 등록
-app.include_router(ocr_router.router, prefix="/api/v1/ocr", tags=["OCR"])
+app.include_router(ocr_router.router, prefix="/api/v2", tags=["Analysis"])
 
 @app.get("/")
 def health_check():

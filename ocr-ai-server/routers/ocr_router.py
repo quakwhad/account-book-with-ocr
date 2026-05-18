@@ -1,15 +1,22 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException
-from services.ocr_service import process_receipt_image, extract_total_amount
-from models.schemas import OCRResponse, ReceiptTotalResponse
+from fastapi import APIRouter, UploadFile, File, Form, HTTPException
+from services.ocr_service import process_receipt_image, extract_receipt_info
+from models.schemas import OCRResponse, CallbackRequest
+import httpx
+import logging
 
 router = APIRouter()
+logger = logging.getLogger(__name__)
 
-@router.post("/receipt", response_model=OCRResponse)
-async def analyze_receipt(file: UploadFile = File(...)):
+SPRING_BOOT_CALLBACK_URL = "http://localhost:8080/api/v1/ledgers/receipt/callback"
+
+@router.post("/analyze", response_model=OCRResponse)
+async def analyze_receipt(
+    file: UploadFile = File(...),
+    userId: int = Form(...)
+):
     """
-    영수증 이미지를 업로드받아 텍스트를 추출합니다.
+    영수증 이미지를 업로드받아 분석하고 결과를 Spring Boot 서버로 콜백합니다.
     """
-    # 이미지 파일 여부 검증
     if not file.content_type.startswith("image/"):
         raise HTTPException(status_code=400, detail="이미지 파일만 업로드 가능합니다.")
 
@@ -20,30 +27,34 @@ async def analyze_receipt(file: UploadFile = File(...)):
         # OCR 서비스 호출
         extracted_data = process_receipt_image(contents)
         
+        # 상세 정보 추출
+        receipt_info = extract_receipt_info(extracted_data)
+        
+        # 콜백 데이터 구성
+        callback_data = CallbackRequest(
+            userId=userId,
+            amount=receipt_info["amount"],
+            category=receipt_info["category"],
+            description=receipt_info["description"],
+            type=receipt_info["type"],
+            date=receipt_info["date"]
+        )
+        
+        # Spring Boot 서버로 콜백 (비동기)
+        async with httpx.AsyncClient() as client:
+            try:
+                response = await client.post(
+                    SPRING_BOOT_CALLBACK_URL,
+                    json=callback_data.model_dump(),
+                    timeout=10.0
+                )
+                response.raise_for_status()
+                logger.info(f"Callback successful: {response.status_code}")
+            except Exception as e:
+                logger.error(f"Callback failed: {str(e)}")
+        
         return OCRResponse(success=True, data=extracted_data)
         
     except Exception as e:
+        logger.error(f"OCR processing failed: {str(e)}")
         raise HTTPException(status_code=500, detail=f"OCR 처리 중 오류가 발생했습니다: {str(e)}")
-    
-@router.post("/receipt/total", response_model=ReceiptTotalResponse)
-async def analyze_receipt_total(file: UploadFile = File(...)):
-    """
-    영수증 이미지를 업로드받아 총 결제 금액만 추출하여 반환합니다.
-    """
-    if not file.content_type.startswith("image/"):
-        raise HTTPException(status_code=400, detail="이미지 파일만 업로드 가능합니다.")
-
-    try:
-        contents = await file.read()
-        
-        # OCR 텍스트 추출
-        extracted_data = process_receipt_image(contents)
-        
-        # 문서의 규칙에 따라 총액 계산
-        total_amount = extract_total_amount(extracted_data)
-        
-        # 형식에 맞춰 반환
-        return ReceiptTotalResponse(total=total_amount)
-        
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"총액 처리 중 오류가 발생했습니다: {str(e)}")
