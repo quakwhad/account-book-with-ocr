@@ -11,3 +11,11 @@ class OCRResponse(BaseModel):
 
 class ReceiptTotalResponse(BaseModel):
     total: int
+
+class CallbackRequest(BaseModel):
+    userId: int
+    amount: int
+    category: str
+    description: str
+    type: str
+    date: str

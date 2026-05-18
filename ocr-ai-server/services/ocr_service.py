@@ -79,3 +79,36 @@ def extract_total_amount(extracted_texts: list) -> int:
                 
         # 그 중 가장 큰 값으로 결정
         return max(possible_numbers) if possible_numbers else 0
+
+def extract_receipt_info(extracted_texts: list) -> dict:
+    """
+    OCR 추출 결과에서 영수증 정보를 추출합니다.
+    """
+    amount = extract_total_amount(extracted_texts)
+    
+    # 기본값 설정
+    info = {
+        "amount": amount,
+        "category": "기타",
+        "description": "영수증 내역",
+        "type": "EXPENSE",
+        "date": "2024-05-18" # 기본값 (오늘 날짜 등으로 대체 가능)
+    }
+    
+    # 간단한 날짜 추출 (YYYY-MM-DD 또는 YYYY.MM.DD 등)
+    import re
+    date_pattern = re.compile(r'(\d{4})[-./](\d{2})[-./](\d{2})')
+    
+    for item in extracted_texts:
+        text = item["text"]
+        match = date_pattern.search(text)
+        if match:
+            info["date"] = f"{match.group(1)}-{match.group(2)}-{match.group(3)}"
+            break
+            
+    # 상호명 추출 시도 (첫 번째 줄 근처의 텍스트)
+    if extracted_texts:
+        # 신뢰도가 높은 첫 번째 텍스트를 상호명으로 가정
+        info["description"] = extracted_texts[0]["text"]
+        
+    return info
