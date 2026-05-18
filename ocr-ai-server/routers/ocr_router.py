@@ -1,13 +1,20 @@
+import os
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException
 from services.ocr_service import process_receipt_image, extract_receipt_info
 from models.schemas import OCRResponse, CallbackRequest
 import httpx
 import logging
+from dotenv import load_dotenv
+
+# .env 파일 로드
+load_dotenv()
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
 SPRING_BOOT_CALLBACK_URL = "http://localhost:8080/api/v1/ledgers/receipt/callback"
+# 환경 변수에서 시크릿 값 가져오기
+CALLBACK_SECRET = os.getenv("CALLBACK_SECRET", "")
 
 @router.post("/analyze", response_model=OCRResponse)
 async def analyze_receipt(
@@ -40,12 +47,18 @@ async def analyze_receipt(
             date=receipt_info["date"]
         )
         
+        # 콜백 전송용 헤더 설정
+        headers = {
+            "X-Callback-Secret": CALLBACK_SECRET
+        }
+        
         # Spring Boot 서버로 콜백 (비동기)
         async with httpx.AsyncClient() as client:
             try:
                 response = await client.post(
                     SPRING_BOOT_CALLBACK_URL,
                     json=callback_data.model_dump(),
+                    headers=headers,
                     timeout=10.0
                 )
                 response.raise_for_status()
