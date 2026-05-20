@@ -1,8 +1,8 @@
 package com.example.apiserver.global.config;
 
-import com.example.apiserver.global.auth.CustomOAuth2UserService;
-import com.example.apiserver.global.auth.JwtAuthenticationFilter;
-import com.example.apiserver.global.auth.OAuth2SuccessHandler;
+import com.example.apiserver.domain.auth.service.CustomOAuth2UserService;
+import com.example.apiserver.global.security.jwt.JwtAuthenticationFilter;
+import com.example.apiserver.global.security.oauth2.OAuth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -66,7 +66,7 @@ public class SecurityConfig {
                                 "/swagger-resources/**",
                                 "/webjars/**"
                         ).permitAll()
-                        .requestMatchers("/api/v1/ledgers/receipt/callback").permitAll()
+                        .requestMatchers("/api/v1/internal/**").permitAll()
                         .requestMatchers("/api/v1/admin/**").hasRole("ROOT")
                         .anyRequest().authenticated()
                 )

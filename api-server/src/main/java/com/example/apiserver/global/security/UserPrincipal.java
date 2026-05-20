@@ -1,4 +1,4 @@
-package com.example.apiserver.global.auth;
+package com.example.apiserver.global.security;
 
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;

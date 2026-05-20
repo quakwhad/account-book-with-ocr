@@ -1,4 +1,4 @@
-package com.example.apiserver.global.client;
+package com.example.apiserver.global.client.fastapi;
 
 import com.example.apiserver.global.exception.CustomException;
 import com.example.apiserver.global.exception.ErrorCode;

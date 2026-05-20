@@ -3,14 +3,13 @@ package com.example.apiserver.domain.user.controller;
 import com.example.apiserver.domain.user.dto.UserRequestDto;
 import com.example.apiserver.domain.user.dto.UserResponseDto;
 import com.example.apiserver.domain.user.service.UserService;
-import com.example.apiserver.global.auth.UserPrincipal;
+import com.example.apiserver.global.security.UserPrincipal;
 import com.example.apiserver.global.common.ApiResponse;
 import com.example.apiserver.global.common.SuccessCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
