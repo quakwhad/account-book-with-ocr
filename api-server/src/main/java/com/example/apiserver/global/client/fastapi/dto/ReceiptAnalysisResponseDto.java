@@ -1,4 +1,4 @@
-package com.example.apiserver.domain.ledger.dto;
+package com.example.apiserver.global.client.fastapi.dto;
 
 import com.example.apiserver.domain.ledger.entity.LedgerType;
 

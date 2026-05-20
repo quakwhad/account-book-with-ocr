@@ -1,4 +1,4 @@
-package com.example.apiserver.global.auth;
+package com.example.apiserver.global.security.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;

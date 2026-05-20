@@ -9,7 +9,7 @@ import com.example.apiserver.domain.ledger.repository.LedgerRepository;
 import com.example.apiserver.domain.user.entity.Role;
 import com.example.apiserver.domain.user.entity.User;
 import com.example.apiserver.domain.user.repository.UserRepository;
-import com.example.apiserver.global.client.FastApiClient;
+import com.example.apiserver.global.client.fastapi.FastApiClient;
 import com.example.apiserver.global.exception.CustomException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -2,12 +2,12 @@ package com.example.apiserver.domain.ledger.service;
 
 import com.example.apiserver.domain.ledger.dto.*;
 import com.example.apiserver.domain.ledger.entity.Ledger;
-import com.example.apiserver.domain.ledger.entity.LedgerType;
 import com.example.apiserver.domain.ledger.mapper.LedgerMapper;
 import com.example.apiserver.domain.ledger.repository.LedgerRepository;
 import com.example.apiserver.domain.user.entity.User;
 import com.example.apiserver.domain.user.repository.UserRepository;
-import com.example.apiserver.global.client.FastApiClient;
+import com.example.apiserver.global.client.fastapi.FastApiClient;
+import com.example.apiserver.global.client.fastapi.dto.ReceiptAnalysisResponseDto;
 import com.example.apiserver.global.exception.CustomException;
 import com.example.apiserver.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
@@ -35,12 +33,6 @@ public class LedgerService {
 
     public boolean isOwner(Long userId, Long ledgerId) {
         return ledgerRepository.existsByIdAndUserId(ledgerId, userId);
-    }
-
-    public void validateCallbackSecret(String secret) {
-        if (secret == null || !secret.equals(callbackSecret)) {
-            throw new CustomException(ErrorCode.UNAUTHORIZED);
-        }
     }
 
     @Transactional
@@ -113,21 +105,5 @@ public class LedgerService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         fastApiClient.uploadReceipt(userId, file);
-    }
-
-    @Transactional
-    public LedgerResponseDto processReceiptCallback(ReceiptAnalysisResponseDto receiptAnalysisResponseDto) {
-        User user = userRepository.findById(receiptAnalysisResponseDto.userId())
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-
-        Ledger ledger = Ledger.builder()
-                .user(user)
-                .amount(receiptAnalysisResponseDto.amount())
-                .category(receiptAnalysisResponseDto.category())
-                .description(receiptAnalysisResponseDto.description())
-                .type(receiptAnalysisResponseDto.type())
-                .date(receiptAnalysisResponseDto.date())
-                .build();
-        return ledgerMapper.toDto(ledgerRepository.save(ledger));
     }
 }

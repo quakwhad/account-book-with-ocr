@@ -2,7 +2,8 @@ package com.example.apiserver.domain.ledger.controller;
 
 import com.example.apiserver.domain.ledger.dto.*;
 import com.example.apiserver.domain.ledger.service.LedgerService;
-import com.example.apiserver.global.auth.UserPrincipal;
+import com.example.apiserver.global.client.fastapi.dto.ReceiptAnalysisResponseDto;
+import com.example.apiserver.global.security.UserPrincipal;
 import com.example.apiserver.global.common.ApiResponse;
 import com.example.apiserver.global.common.SuccessCode;
 import io.swagger.v3.oas.annotations.Operation;
@@ -80,14 +81,5 @@ public class LedgerController {
             @RequestPart("file") MultipartFile file) {
         ledgerService.uploadReceipt(userPrincipal.getUserId(), file);
         return ApiResponse.success(SuccessCode.SUCCESS);
-    }
-
-    @Operation(summary = "FastAPI 분석 결과 수신 (Callback)", description = "FastAPI 서버에서 분석된 결과를 수신하여 임시 내역을 생성합니다.")
-    @PostMapping("/receipt/callback")
-    public ApiResponse<LedgerResponseDto> receiveReceiptCallback(
-            @RequestHeader(value = "X-Callback-Secret", required = false) String secret,
-            @RequestBody ReceiptAnalysisResponseDto receiptAnalysisResponseDto) {
-        ledgerService.validateCallbackSecret(secret);
-        return ApiResponse.success(SuccessCode.SUCCESS, ledgerService.processReceiptCallback(receiptAnalysisResponseDto));
     }
 }
