@@ -55,7 +55,7 @@ public class SecurityConfig {
                                 "/**/*.html",
                                 "/**/*.css",
                                 "/**/*.js",
-                                "/token"
+                                "/api/v1/auth/**"
                         ).permitAll()
                         .requestMatchers(
                                 "/v3/api-docs/**",
