@@ -18,8 +18,11 @@ public class JwtTokenProvider {
     @Value("${jwt.secret}")
     private String secretKey;
 
-    @Value("${jwt.expiration:86400000}") // Default 24 hours
-    private long expirationTime;
+    @Value("${jwt.expiration:3600000}") // Default 1 hour
+    private long accessTokenExpirationTime;
+
+    @Value("${jwt.refresh-expiration:1209600000}") // Default 14 days
+    private long refreshTokenExpirationTime;
 
     private SecretKey key;
 
@@ -28,7 +31,15 @@ public class JwtTokenProvider {
         key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String createToken(Long userId, String email, String role) {
+    public String createAccessToken(Long userId, String email, String role) {
+        return createToken(userId, email, role, accessTokenExpirationTime);
+    }
+
+    public String createRefreshToken(Long userId, String email, String role) {
+        return createToken(userId, email, role, refreshTokenExpirationTime);
+    }
+
+    private String createToken(Long userId, String email, String role, long expirationTime) {
         Claims claims = Jwts.claims()
                 .subject(email)
                 .add("userId", userId)

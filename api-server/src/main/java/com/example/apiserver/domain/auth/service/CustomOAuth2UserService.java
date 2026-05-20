@@ -41,7 +41,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
         Map<String, Object> attributes = oAuth2User.getAttributes();
 
-        // 💡 프로바이더별 인터페이스 분기 조립 (나중에 카카오, 네이버가 생기면 여기 else if만 추가됨)
+        // 프로바이더별 인터페이스 분기 조립 (나중에 카카오, 네이버가 생기면 여기 else if만 추가됨)
         OAuth2UserInfo oAuth2UserInfo;
         if (registrationId.equalsIgnoreCase("google")) {
             oAuth2UserInfo = new GoogleOAuth2UserInfo(attributes);
@@ -56,7 +56,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                 oAuth2UserInfo.getProviderId()
         );
 
-        // 💡 성공 핸들러로 안전하게 넘겨주기 위해 CustomOAuth2UserPrincipal 반환
+        // 성공 핸들러로 안전하게 넘겨주기 위해 CustomOAuth2UserPrincipal 반환
         return new CustomOAuth2UserPrincipal(
                 user.getEmail(),
                 Collections.singleton(new SimpleGrantedAuthority(user.getRole().getKey())),
