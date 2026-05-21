@@ -11,10 +11,18 @@ public class RestClientConfig {
     @Value("${external-api.fastapi.base-url}")
     private String fastApiBaseUrl;
 
-    @Bean
+    // FastAPI 전용 RestClient
+    @Bean(name = "fastApiRestClient")
     public RestClient fastApiRestClient() {
         return RestClient.builder()
                 .baseUrl(fastApiBaseUrl)
+                .build();
+    }
+
+    // KOSIS API 전용 RestClient
+    @Bean(name = "kosisRestClient")
+    public RestClient kosisRestClient() {
+        return RestClient.builder()
                 .build();
     }
 }

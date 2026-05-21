@@ -14,6 +14,7 @@ public enum ErrorCode {
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "E004", "서버 내부 오류가 발생했습니다."),
     EXTERNAL_API_ERROR(HttpStatus.BAD_GATEWAY, "E005", "외부 API 연동 중 문제가 발생했습니다."),
     FASTAPI_SERVER_ERROR(HttpStatus.SERVICE_UNAVAILABLE, "E006", "FastAPI 서버를 이용할 수 없습니다."),
+    KOSIS_SERVER_ERROR(HttpStatus.SERVICE_UNAVAILABLE, "E007", "KOSIS API 서버를 이용할 수 없습니다."),
 
     // Ledger
     LEDGER_NOT_FOUND(HttpStatus.NOT_FOUND, "L001", "가계부 내역을 찾을 수 없습니다."),

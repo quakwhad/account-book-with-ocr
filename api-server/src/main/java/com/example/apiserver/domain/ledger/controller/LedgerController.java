@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -80,5 +81,17 @@ public class LedgerController {
             @RequestPart("file") MultipartFile file) {
         ledgerService.uploadReceipt(userPrincipal.getUserId(), file);
         return ApiResponse.success(SuccessCode.SUCCESS);
+    }
+
+    @Operation(summary = "전국 평균 지출 비교", description = "나의 지출 총액과 전국 평균 지출을 비교합니다.")
+    @GetMapping("/compare")
+    public ApiResponse<LedgerComparisonResponseDto> compareLedger(
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+
+        // JWT/Session에서 가져온 실제 유저 ID 사용
+        LedgerComparisonResponseDto responseDto = ledgerService.compareWithNationalAverage(userPrincipal.getUserId());
+
+        // 프로젝트 공통 규격인 ApiResponse로 감싸서 반환
+        return ApiResponse.success(SuccessCode.SUCCESS, responseDto);
     }
 }
