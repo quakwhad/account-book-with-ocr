@@ -27,11 +27,6 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        // 이미 탈퇴한 회원이면 조회 불가능하도록 차단
-        if (user.isDeleted()) {
-            throw new CustomException(ErrorCode.USER_NOT_FOUND);
-        }
-
         return UserResponseDto.from(user);
     }
 

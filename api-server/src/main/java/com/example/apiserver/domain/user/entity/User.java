@@ -1,10 +1,12 @@
 package com.example.apiserver.domain.user.entity;
 
+import com.example.apiserver.global.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -16,8 +18,8 @@ import java.util.UUID;
 @Table(name = "users")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EntityListeners(AuditingEntityListener.class) // 시간 자동 기록을 위한 리스너 추가
-public class User {
+@Where(clause = "is_deleted = false")
+public class User extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,15 +42,15 @@ public class User {
     private Role role;
 
     @Column(nullable = false)
-    private boolean isDeleted = false; // 1. 논리적 삭제 플래그 추가
+    private boolean isDeleted = false;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt; // 가입일 추가
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
     @Column(nullable = false)
-    private LocalDateTime updatedAt; // 수정일 추가
+    private LocalDateTime updatedAt;
 
     @Builder
     public User(String email, String name, String provider, String providerId, Role role) {

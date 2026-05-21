@@ -1,6 +1,7 @@
 package com.example.apiserver.domain.ledger.entity;
 
 import com.example.apiserver.domain.user.entity.User;
+import com.example.apiserver.global.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -13,7 +14,7 @@ import java.time.LocalDate;
 @Table(name = "ledgers")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Ledger {
+public class Ledger extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

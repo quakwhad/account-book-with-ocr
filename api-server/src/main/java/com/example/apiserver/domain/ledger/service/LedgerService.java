@@ -74,10 +74,6 @@ public class LedgerService {
         Ledger ledger = ledgerRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.LEDGER_NOT_FOUND));
 
-        if (!ledger.getUser().getId().equals(userId)) {
-            throw new CustomException(ErrorCode.UNAUTHORIZED);
-        }
-
         ledger.update(
                 ledgerRequestDto.amount(),
                 ledgerRequestDto.category(),
@@ -93,10 +89,6 @@ public class LedgerService {
     public void deleteLedger(Long userId, Long id) {
         Ledger ledger = ledgerRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.LEDGER_NOT_FOUND));
-
-        if (!ledger.getUser().getId().equals(userId)) {
-            throw new CustomException(ErrorCode.UNAUTHORIZED);
-        }
 
         ledgerRepository.delete(ledger);
     }
