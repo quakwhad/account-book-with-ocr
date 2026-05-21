@@ -1,6 +1,6 @@
 package com.example.apiserver.global.security.jwt;
 
-import com.example.apiserver.global.security.UserPrincipal;
+import com.example.apiserver.global.security.principal.UserPrincipal;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

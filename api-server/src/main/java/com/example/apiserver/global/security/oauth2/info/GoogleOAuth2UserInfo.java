@@ -1,14 +1,8 @@
-package com.example.apiserver.global.security.oauth2.provider;
+package com.example.apiserver.global.security.oauth2.info;
 
 import java.util.Map;
 
-public class GoogleOAuth2UserInfo implements OAuth2UserInfo {
-
-    private final Map<String, Object> attributes;
-
-    public GoogleOAuth2UserInfo(Map<String, Object> attributes) {
-        this.attributes = attributes;
-    }
+public record GoogleOAuth2UserInfo(Map<String, Object> attributes) implements OAuth2UserInfo {
 
     @Override
     public String getProviderId() {

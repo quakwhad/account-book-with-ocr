@@ -1,4 +1,4 @@
-package com.example.apiserver.global.security.oauth2.principal;
+package com.example.apiserver.global.security.principal;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;

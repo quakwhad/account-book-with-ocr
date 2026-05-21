@@ -1,4 +1,4 @@
-package com.example.apiserver.global.security.oauth2.provider;
+package com.example.apiserver.global.security.oauth2.info;
 
 public interface OAuth2UserInfo {
     String getProviderId(); // 소셜 서비스의 고유 식별자

@@ -67,12 +67,13 @@ public class JwtTokenProvider {
     }
 
     public Long getUserId(String token) {
-        return Jwts.parser()
+        Number userId = Jwts.parser()
                 .verifyWith(key)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload()
-                .get("userId", Long.class);
+                .get("userId", Number.class);
+        return userId != null ? userId.longValue() : null;
     }
 
     public String getRole(String token) {
