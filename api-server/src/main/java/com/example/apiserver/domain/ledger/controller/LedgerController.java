@@ -2,8 +2,7 @@ package com.example.apiserver.domain.ledger.controller;
 
 import com.example.apiserver.domain.ledger.dto.*;
 import com.example.apiserver.domain.ledger.service.LedgerService;
-import com.example.apiserver.global.client.fastapi.dto.ReceiptAnalysisResponseDto;
-import com.example.apiserver.global.security.UserPrincipal;
+import com.example.apiserver.global.security.principal.UserPrincipal;
 import com.example.apiserver.global.common.ApiResponse;
 import com.example.apiserver.global.common.SuccessCode;
 import io.swagger.v3.oas.annotations.Operation;

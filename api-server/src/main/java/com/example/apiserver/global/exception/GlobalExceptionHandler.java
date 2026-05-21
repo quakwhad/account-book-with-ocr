@@ -3,7 +3,9 @@ package com.example.apiserver.global.exception;
 import com.example.apiserver.global.common.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -54,5 +56,19 @@ public class GlobalExceptionHandler {
         // 클라이언트에게는 정제된 에러 메시지만 전달
         return ResponseEntity.status(ErrorCode.INTERNAL_SERVER_ERROR.getStatus())
                 .body(ApiResponse.error(ErrorCode.INTERNAL_SERVER_ERROR));
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiResponse<Object>> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        log.warn("HttpMessageNotReadableException: {}", e.getMessage());
+        return ResponseEntity.status(ErrorCode.INVALID_INPUT_VALUE.getStatus())
+                .body(ApiResponse.error(ErrorCode.INVALID_INPUT_VALUE, "JSON 요청 형식이 잘못되었습니다."));
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ApiResponse<Object>> handleMissingServletRequestParameterException(MissingServletRequestParameterException e) {
+        log.warn("MissingServletRequestParameterException: {}", e.getMessage());
+        return ResponseEntity.status(ErrorCode.INVALID_INPUT_VALUE.getStatus())
+                .body(ApiResponse.error(ErrorCode.INVALID_INPUT_VALUE, e.getParameterName() + " 파라미터가 누락되었습니다."));
     }
 }

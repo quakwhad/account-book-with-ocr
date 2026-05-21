@@ -1,11 +1,11 @@
-package com.example.apiserver.domain.auth.service;
+package com.example.apiserver.global.security.service;
 
 import com.example.apiserver.domain.user.entity.Role;
 import com.example.apiserver.domain.user.entity.User;
 import com.example.apiserver.domain.user.repository.UserRepository;
-import com.example.apiserver.global.security.oauth2.principal.CustomOAuth2UserPrincipal;
-import com.example.apiserver.global.security.oauth2.provider.GoogleOAuth2UserInfo;
-import com.example.apiserver.global.security.oauth2.provider.OAuth2UserInfo;
+import com.example.apiserver.global.security.principal.CustomOAuth2UserPrincipal;
+import com.example.apiserver.global.security.oauth2.info.GoogleOAuth2UserInfo;
+import com.example.apiserver.global.security.oauth2.info.OAuth2UserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

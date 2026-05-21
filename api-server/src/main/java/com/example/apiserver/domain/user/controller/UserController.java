@@ -3,7 +3,7 @@ package com.example.apiserver.domain.user.controller;
 import com.example.apiserver.domain.user.dto.UserRequestDto;
 import com.example.apiserver.domain.user.dto.UserResponseDto;
 import com.example.apiserver.domain.user.service.UserService;
-import com.example.apiserver.global.security.UserPrincipal;
+import com.example.apiserver.global.security.principal.UserPrincipal;
 import com.example.apiserver.global.common.ApiResponse;
 import com.example.apiserver.global.common.SuccessCode;
 import io.swagger.v3.oas.annotations.Operation;
