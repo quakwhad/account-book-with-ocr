@@ -13,7 +13,6 @@ import com.example.apiserver.global.client.kosis.dto.KosisStatisticResponseDto;
 import com.example.apiserver.global.exception.CustomException;
 import com.example.apiserver.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -33,9 +32,6 @@ public class LedgerService {
     private final FastApiClient fastApiClient;
     private final LedgerMapper ledgerMapper;
     private final KosisApiClient kosisApiClient;
-
-    @Value("${external-api.fastapi.callback-secret}")
-    private String callbackSecret;
 
     public boolean isOwner(Long userId, Long ledgerId) {
         return ledgerRepository.existsByIdAndUserId(ledgerId, userId);

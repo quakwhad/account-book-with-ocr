@@ -30,7 +30,7 @@ public class RestClientConfig {
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
         converter.setSupportedMediaTypes(Arrays.asList(
                 MediaType.APPLICATION_JSON,
-                MediaType.TEXT_HTML // KOSIS 서버의 잘못된 헤더 대응
+                MediaType.TEXT_HTML
         ));
 
         return RestClient.builder()

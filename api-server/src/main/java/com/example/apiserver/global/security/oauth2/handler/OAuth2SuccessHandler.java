@@ -7,11 +7,12 @@ import com.example.apiserver.global.exception.CustomException;
 import com.example.apiserver.global.exception.ErrorCode;
 import com.example.apiserver.global.security.jwt.JwtTokenProvider;
 import com.example.apiserver.global.security.principal.CustomOAuth2UserPrincipal;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -27,7 +28,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private final UserRepository userRepository;
     private final AuthService authService;
 
-    @Value("${spring.security.oauth2.success-redirect-url}")
+    @Value("${app.oauth2.success-redirect-url}")
     private String successRedirectUrl;
 
     // Refresh Token의 만료 시간 (초 단위). 예: 14일
@@ -47,22 +48,18 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         // Refresh Token DB 저장
         authService.saveRefreshToken(user, refreshToken);
 
-        // Refresh Token을 담을 HttpOnly 쿠키 생성
-        Cookie refreshTokenCookie = new Cookie("refresh_token", refreshToken);
-        refreshTokenCookie.setHttpOnly(true); // 자바스크립트(XSS)로 쿠키 접근 차단
-        refreshTokenCookie.setPath("/"); // 애플리케이션 전체에서 쿠키 전송
-        refreshTokenCookie.setMaxAge(REFRESH_TOKEN_EXPIRATION_SEC); // 쿠키 수명 설정
-
-        // HTTPS에서는 아래 주석 지우기
-        // refreshTokenCookie.setSecure(true);
-
-        // 응답 헤더에 쿠키 추가
-        response.addCookie(refreshTokenCookie);
+        ResponseCookie refreshTokenCookie = ResponseCookie.from("refresh_token", refreshToken)
+                .httpOnly(true)
+                .path("/")
+                .maxAge(REFRESH_TOKEN_EXPIRATION_SEC)
+                .sameSite("Lax")
+                // .secure(true) // HTTPS 적용 시 활성화
+                .build();
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
 
         // 리다이렉트 URL에는 Access Token만 포함
         String targetUrl = UriComponentsBuilder.fromUriString(successRedirectUrl)
                 .queryParam("accessToken", accessToken)
-                // refreshToken 파라미터는 제거됨
                 .build().toUriString();
 
         getRedirectStrategy().sendRedirect(request, response, targetUrl);

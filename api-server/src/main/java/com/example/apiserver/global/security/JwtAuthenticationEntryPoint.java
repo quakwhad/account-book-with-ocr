@@ -31,7 +31,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         response.setCharacterEncoding("UTF-8");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
-        // 기존에 사용 중인 ApiResponse 및 ErrorCode.UNAUTHORIZED(A004) 적용
         ApiResponse<Object> apiResponse = ApiResponse.error(ErrorCode.UNAUTHORIZED);
 
         response.getWriter().write(objectMapper.writeValueAsString(apiResponse));
