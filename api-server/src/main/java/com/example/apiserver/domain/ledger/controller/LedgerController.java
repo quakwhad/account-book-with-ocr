@@ -87,11 +87,7 @@ public class LedgerController {
     @GetMapping("/compare")
     public ApiResponse<LedgerComparisonResponseDto> compareLedger(
             @AuthenticationPrincipal UserPrincipal userPrincipal) {
-
-        // JWT/Session에서 가져온 실제 유저 ID 사용
         LedgerComparisonResponseDto responseDto = ledgerService.compareWithNationalAverage(userPrincipal.getUserId());
-
-        // 프로젝트 공통 규격인 ApiResponse로 감싸서 반환
         return ApiResponse.success(SuccessCode.SUCCESS, responseDto);
     }
 }

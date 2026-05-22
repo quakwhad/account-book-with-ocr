@@ -1,4 +1,4 @@
-package com.example.apiserver.global.security.service;
+package com.example.apiserver.domain.auth.service;
 
 import com.example.apiserver.domain.auth.dto.TokenResponseDto;
 import com.example.apiserver.domain.auth.entity.RefreshToken;
@@ -25,7 +25,6 @@ public class AuthService {
 
     @Transactional
     public TokenResponseDto refreshToken(String refreshToken, HttpServletResponse response) {
-        // 기존 토큰 검증 로직
         if (!jwtTokenProvider.validateToken(refreshToken)) {
             throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
@@ -51,7 +50,7 @@ public class AuthService {
                 .build();
         response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
 
-        // 프론트엔드에게는 Access Token만 JSON으로 반환 (Refresh Token 필드는 null 이거나 DTO에서 제거)
+        // Access Token만 JSON으로 반환
         return TokenResponseDto.of(newAccessToken, null);
     }
 

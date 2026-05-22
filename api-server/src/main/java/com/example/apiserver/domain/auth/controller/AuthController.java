@@ -38,7 +38,7 @@ public class AuthController {
 
     @Operation(summary = "로그인 성공 토큰 확인 (개발용)")
     @GetMapping("/token")
-    public String showToken(@RequestParam String accessToken, @RequestParam String refreshToken) {
-        return "로그인 성공!\n\nAccess Token:\n" + accessToken + "\n\nRefresh Token:\n" + refreshToken;
+    public String showToken(@RequestParam String accessToken) {
+        return "로그인 성공!\n\nAccess Token:\n" + accessToken;
     }
 }

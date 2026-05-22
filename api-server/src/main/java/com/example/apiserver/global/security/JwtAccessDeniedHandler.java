@@ -31,7 +31,6 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
         response.setCharacterEncoding("UTF-8");
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 
-        // 기존에 사용 중인 ErrorCode.FORBIDDEN(A005) 적용
         ApiResponse<Object> apiResponse = ApiResponse.error(ErrorCode.FORBIDDEN);
 
         response.getWriter().write(objectMapper.writeValueAsString(apiResponse));

@@ -6,19 +6,15 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Where;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.hibernate.annotations.SQLRestriction;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Table(name = "users")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Where(clause = "is_deleted = false")
+@SQLRestriction("is_deleted = false")
 public class User extends BaseTimeEntity {
 
     @Id
@@ -43,14 +39,6 @@ public class User extends BaseTimeEntity {
 
     @Column(nullable = false)
     private boolean isDeleted = false;
-
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
 
     @Builder
     public User(String email, String name, String provider, String providerId, Role role) {
