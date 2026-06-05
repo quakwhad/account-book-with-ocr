@@ -1,6 +1,6 @@
 package com.example.apiserver.global.security.oauth2.handler;
 
-import com.example.apiserver.global.security.service.AuthService;
+import com.example.apiserver.domain.auth.service.AuthService;
 import com.example.apiserver.domain.user.entity.User;
 import com.example.apiserver.domain.user.repository.UserRepository;
 import com.example.apiserver.global.exception.CustomException;

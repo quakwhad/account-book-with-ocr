@@ -1,7 +1,7 @@
 package com.example.apiserver.domain.auth.controller;
 
 import com.example.apiserver.domain.auth.dto.TokenResponseDto;
-import com.example.apiserver.global.security.service.AuthService;
+import com.example.apiserver.domain.auth.service.AuthService;
 import com.example.apiserver.global.common.ApiResponse;
 import com.example.apiserver.global.common.SuccessCode;
 import com.example.apiserver.global.exception.CustomException;
