@@ -17,7 +17,7 @@ public record LedgerResponseDto(
     public static LedgerResponseDto from(Ledger ledger) {
         return new LedgerResponseDto(
             ledger.getId(),
-            ledger.getUser().getId(),
+            ledger.getUserId(),
             ledger.getAmount(),
             ledger.getCategory(),
             ledger.getDescription(),

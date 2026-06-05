@@ -6,10 +6,8 @@ import com.example.apiserver.domain.ledger.entity.Ledger;
 import com.example.apiserver.domain.ledger.entity.LedgerType;
 import com.example.apiserver.domain.ledger.mapper.LedgerMapper;
 import com.example.apiserver.domain.ledger.repository.LedgerRepository;
-import com.example.apiserver.domain.user.entity.Role;
-import com.example.apiserver.domain.user.entity.User;
-import com.example.apiserver.domain.user.repository.UserRepository;
 import com.example.apiserver.global.client.fastapi.FastApiClient;
+import com.example.apiserver.global.client.kosis.KosisApiClient;
 import com.example.apiserver.global.exception.CustomException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,13 +33,13 @@ class LedgerServiceTest {
     private LedgerRepository ledgerRepository;
 
     @Mock
-    private UserRepository userRepository;
-
-    @Mock
     private LedgerMapper ledgerMapper;
 
     @Mock
     private FastApiClient fastApiClient;
+
+    @Mock
+    private KosisApiClient kosisApiClient;
 
     @InjectMocks
     private LedgerService ledgerService;
@@ -51,13 +49,10 @@ class LedgerServiceTest {
     void createLedger_Success() {
         // given
         Long userId = 1L;
-        User user = User.builder().email("test@example.com").name("Tester").role(Role.USER).provider("google").providerId("123").build();
-        ReflectionTestUtils.setField(user, "id", userId);
-        
         LedgerRequestDto requestDto = new LedgerRequestDto(10000L, "식비", "점심", LedgerType.EXPENSE, LocalDate.now());
-        
+
         Ledger ledger = Ledger.builder()
-                .user(user)
+                .userId(userId)
                 .amount(requestDto.amount())
                 .category(requestDto.category())
                 .description(requestDto.description())
@@ -68,7 +63,6 @@ class LedgerServiceTest {
 
         LedgerResponseDto responseDto = new LedgerResponseDto(1L, userId, 10000L, "식비", "점심", LedgerType.EXPENSE, LocalDate.now());
 
-        given(userRepository.findById(userId)).willReturn(Optional.of(user));
         given(ledgerRepository.save(any(Ledger.class))).willReturn(ledger);
         given(ledgerMapper.toDto(any(Ledger.class))).willReturn(responseDto);
 
@@ -81,15 +75,14 @@ class LedgerServiceTest {
     }
 
     @Test
-    @DisplayName("가계부 내역 생성 실패 - 사용자 없음")
-    void createLedger_UserNotFound() {
+    @DisplayName("가계부 내역 조회 실패 - 존재하지 않는 ID")
+    void getLedger_NotFound() {
         // given
-        Long userId = 1L;
-        LedgerRequestDto requestDto = new LedgerRequestDto(10000L, "식비", "점심", LedgerType.EXPENSE, LocalDate.now());
-        given(userRepository.findById(userId)).willReturn(Optional.empty());
+        Long ledgerId = 999L;
+        given(ledgerRepository.findById(ledgerId)).willReturn(Optional.empty());
 
         // when & then
-        assertThatThrownBy(() -> ledgerService.createLedger(userId, requestDto))
+        assertThatThrownBy(() -> ledgerService.getLedger(ledgerId))
                 .isInstanceOf(CustomException.class);
     }
 }

@@ -20,7 +20,7 @@ public interface LedgerRepository extends JpaRepository<Ledger, Long> {
     boolean existsByIdAndUserId(Long id, Long userId);
 
     // DB 단에서 합계만 계산하여 가져오도록 쿼리 추가
-    @Query("SELECT COALESCE(SUM(l.amount), 0) FROM Ledger l WHERE l.user.id = :userId AND l.type = :type AND l.date >= :startDate AND l.date <= :endDate")
+    @Query("SELECT COALESCE(SUM(l.amount), 0) FROM Ledger l WHERE l.userId = :userId AND l.type = :type AND l.date >= :startDate AND l.date <= :endDate")
     Long sumAmountByUserIdAndTypeAndDateBetween(
             @Param("userId") Long userId,
             @Param("type") LedgerType type,

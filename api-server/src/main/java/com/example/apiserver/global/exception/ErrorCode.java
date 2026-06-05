@@ -24,12 +24,7 @@ public enum ErrorCode {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "U001", "사용자를 찾을 수 없습니다."),
     USER_DUPLICATED(HttpStatus.CONFLICT, "U002", "이미 존재하는 사용자입니다."),
 
-    // Auth
-    LOGIN_FAILED(HttpStatus.UNAUTHORIZED, "A001", "로그인에 실패했습니다."),
-    INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "A002", "유효하지 않은 토큰입니다."),
-    EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "A003", "만료된 토큰입니다."),
-    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "A004", "인증되지 않은 사용자입니다."),
-    FORBIDDEN(HttpStatus.FORBIDDEN, "A005", "권한이 없습니다."); // 예시 추가됨
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "A001", "인증되지 않은 요청입니다.");
 
     private final HttpStatus status;
     private final String code;

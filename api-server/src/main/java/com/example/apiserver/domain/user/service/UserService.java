@@ -7,10 +7,10 @@ import com.example.apiserver.domain.user.repository.UserRepository;
 import com.example.apiserver.global.exception.CustomException;
 import com.example.apiserver.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -19,39 +19,42 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public Page<UserResponseDto> getAllUsers(Pageable pageable) {
-        return userRepository.findAll(pageable).map(UserResponseDto::from);
+    @Transactional
+    public UserResponseDto createUser(UserRequestDto dto) {
+        if (userRepository.existsByEmail(dto.email())) {
+            throw new CustomException(ErrorCode.USER_DUPLICATED);
+        }
+        User user = User.builder()
+                .name(dto.name())
+                .email(dto.email())
+                .build();
+        return UserResponseDto.from(userRepository.save(user));
     }
 
     public UserResponseDto getUser(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        return UserResponseDto.from(findById(id));
+    }
 
-        return UserResponseDto.from(user);
+    public List<UserResponseDto> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(UserResponseDto::from)
+                .toList();
     }
 
     @Transactional
-    public UserResponseDto updateUser(Long id, UserRequestDto userRequestDto) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-
-        if (user.isDeleted()) {
-            throw new CustomException(ErrorCode.USER_NOT_FOUND);
-        }
-
-        user.update(userRequestDto.name());
+    public UserResponseDto updateUser(Long id, UserRequestDto dto) {
+        User user = findById(id);
+        user.update(dto.name(), dto.email());
         return UserResponseDto.from(user);
     }
 
     @Transactional
     public void deleteUser(Long id) {
-        User user = userRepository.findById(id)
+        userRepository.delete(findById(id));
+    }
+
+    private User findById(Long id) {
+        return userRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-
-        if (user.isDeleted()) {
-            throw new CustomException(ErrorCode.USER_NOT_FOUND);
-        }
-
-        user.delete();
     }
 }
