@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(./gradlew compileJava)",
-      "PowerShell(Get-Command gradle -ErrorAction SilentlyContinue)"
-    ]
-  }
-}

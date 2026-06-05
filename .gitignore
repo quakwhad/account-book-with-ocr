@@ -73,3 +73,9 @@ application-*.yml
 application-*.properties
 application.yml
 application.properties
+
+# =========================
+# Others
+# =========================
+lecture/
+**/.claude/
