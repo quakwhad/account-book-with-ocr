@@ -12,7 +12,7 @@ load_dotenv()
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
-SPRING_BOOT_CALLBACK_URL = "http://localhost:8080/api/v1/ledgers/receipt/callback"
+SPRING_BOOT_CALLBACK_URL = "http://localhost:8080/api/v1/internal/receipt/callback"
 # 환경 변수에서 시크릿 값 가져오기
 CALLBACK_SECRET = os.getenv("CALLBACK_SECRET", "")
 
